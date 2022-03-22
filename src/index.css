@@ -1,3 +1,96 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+/*Home page classes*/
+@layer components{
+
+    body{
+        @apply bg-[#1c1e29]
+    }
+.homePageWrapper{
+    @apply flex items-center justify-center h-screen text-white
+}
+
+.formWrapper{
+    @apply bg-[#282a36] rounded-[10px] w-[400px] max-w-[90%] p-3
+}
+footer{
+    @apply fixed bottom-3 
+}
+
+footer a{
+    @apply text-[#4aee88]
+}
+
+.inputGroup{
+    @apply flex flex-col
+}
+.mainLabel{
+    @apply mb-5 
+}
+.homePageLogo{
+    @apply mb-7 h-20
+}
+.inputBox{
+    @apply p-[10px] rounded-[5px] mb-[14px] bg-[#eee] text-base font-bold text-black
+}
+.btn{
+@apply p-[10px] rounded-[5px] cursor-pointer transition-all duration-300 ease-in-out
+}
+.joinBtn{
+    @apply bg-[#4aed88] w-[100px] ml-auto text-black hover:bg-[#2b824c]
+}
+
+.createInfo{
+    @apply my-0 mx-auto mb-2
+}
+.createNewBtn,footer a {
+    @apply text-[#4aed88] border-b border-[#4aed88] border-solid transition-all duration-300 ease-in-out hover:text-[#2b824c] hover:border-[#2b824c]
+}
+
+}
+
+/*Editor Page Classes*/
+@layer components{
+
+     .mainWrap{
+@apply grid grid-cols-[230px_minmax(0,_1fr)] 
+    }
+
+    .aside{
+        @apply bg-[#1c1e29] p-4 text-white
+        flex flex-col h-screen
+     }
+
+    .asideInner{
+        @apply h-full
+    }
+
+    .clientsList{
+    @apply flex items-center flex-wrap gap-5 mt-2
+    }
+
+    .client{
+        @apply flex items-center flex-col font-bold 
+    }
+
+    .logo{
+@apply border-b border-[#424242] border-solid p-[10px] mb-1
+    }
+
+    .logoImage{
+        @apply h-16
+    }
+
+    .leaveBtn{
+        @apply mt-5 bg-[#4aed88] text-black font-[500]
+    }
+    .copyBtn{
+        @apply bg-slate-100 text-black font-[500]
+    }
+   
+
+}
