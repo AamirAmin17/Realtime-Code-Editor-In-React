@@ -1,13 +1,23 @@
 //internal imports
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "../../assets/images/code-sync.png";
 import Client from "../../components/Client";
 import EditorComponent from "../../components/Editor";
+import { initSocket } from "../../client/socket";
 const Editor = () => {
   const [clients, setClients] = useState([
     { sockedId: 1, username: "Aamir Amin" },
     { sockedId: 2, username: "Ali Aslam" },
   ]);
+
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    const init = async () => {
+      socketRef.current = await initSocket();
+    };
+    init();
+  }, []);
 
   return (
     <div className="mainWrap">
