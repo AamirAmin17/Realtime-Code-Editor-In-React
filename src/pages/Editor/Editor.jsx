@@ -1,13 +1,14 @@
 //internal imports
 import React, { useEffect, useRef, useState } from "react";
 import Logo from "../../assets/images/code-sync.png";
+import Actions from "../../constants/actions/Actions";
 import Client from "../../components/Client";
 import EditorComponent from "../../components/Editor";
 import { initSocket } from "../../client/socket";
-// import Actions from "../../constants/actions/actions";
 import "./Editor.scss";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+
 const Editor = () => {
   const [clients, setClients] = useState([
     { sockedId: 1, username: "Aamir Amin" },
@@ -27,15 +28,17 @@ const Editor = () => {
   useEffect(() => {
     const init = async () => {
       socketRef.current = await initSocket();
+      console.log(socketRef.current);
       socketRef.current.on("connect_error", (err) => handleErrors(err));
       socketRef.current.on("connect_failed", (err) => handleErrors(err));
       socketRef.current.emit(Actions.JOIN, {
         roomId,
-        username: location.state?.username,
+        username: location.state,
       });
     };
+
     init();
-  }, []);
+  }, [socketRef.current]);
 
   return (
     <div className='mainWrap'>
