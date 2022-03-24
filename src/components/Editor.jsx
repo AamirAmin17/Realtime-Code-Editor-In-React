@@ -7,8 +7,9 @@ import "codemirror/theme/dracula.css";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
+import Actions from "../constants/actions/Actions";
 
-const Editor = () => {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const mirrorRef = useRef();
   const [srcDoc, setSrcDoc] = useState("");
   console.log("srcDoc", srcDoc);
@@ -36,9 +37,36 @@ const Editor = () => {
           lineNumbers: true,
         }
       );
+      mirrorRef.current.on("change", (instance, changes) => {
+        const { origin } = changes;
+        const code = instance.getValue();
+        onCodeChange(code);
+
+        if (origin !== "setValue") {
+          socketRef.current.emit(Actions.CODE_CHANGE, {
+            roomId,
+            code,
+          });
+        }
+      });
     }
     init();
   }, []);
+
+  useEffect(() => {
+    //listening code change (sync code) event
+    if (socketRef.current) {
+      socketRef.current.on(Actions.CODE_CHANGE, ({ code }) => {
+        if (code !== null) {
+          mirrorRef.current.setValue(code);
+        }
+      });
+    }
+
+    return () => {
+      socketRef.current.off(Actions.CODE_CHANGE);
+    };
+  }, [socketRef.current]);
 
   return (
     <div>
@@ -47,7 +75,7 @@ const Editor = () => {
         className='bg-slate-600 text-white rounded my-3 p-3 transition-all duration-200 ease-in-out min-w-[100px] hover:bg-slate-700'>
         Run
       </button> */}
-      <textarea id='realtimeEditor'>Editor</textarea>
+      <textarea id="realtimeEditor"></textarea>
       {/* <iframe
         srcDoc={srcDoc}
         title='output'

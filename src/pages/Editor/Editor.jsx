@@ -10,13 +10,12 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Editor = () => {
-  const [clients, setClients] = useState([
-    { sockedId: 1, username: "Aamir Amin" },
-    { sockedId: 2, username: "Ali Aslam" },
-  ]);
+  const [clients, setClients] = useState([]);
+  console.log("Clients", clients);
   const location = useLocation();
   const { roomId } = useParams();
   const socketRef = useRef(null);
+  const codeRef = useRef(null);
 
   const reactNavigate = useNavigate();
 
@@ -35,31 +34,82 @@ const Editor = () => {
         roomId,
         username: location.state,
       });
+
+      //Listening for joined event
+      socketRef.current.on(
+        Actions.JOINED,
+        ({ clients, username, socketId }) => {
+          toast.success(`${username} joined the room`);
+          setClients(clients);
+          socketRef.current.emit(Actions.SYNC_CODE, {
+            code: codeRef.current,
+            socketId,
+          });
+        }
+      );
+
+      //Listening for disconnected clients
+
+      socketRef.current.on(Actions.DISCONNECTED, ({ socketId, username }) => {
+        toast.success(`${username} left the room`);
+        setClients((prev) => {
+          return prev.filter((client) => client.socketId !== socketId);
+        });
+      });
     };
 
     init();
-  }, [socketRef.current]);
+
+    return () => {
+      socketRef.current.off(Actions.JOINED);
+      socketRef.current.off(Actions.DISCONNECTED);
+      socketRef.current.disconnect();
+    };
+  }, []);
+
+  async function copyRoomId() {
+    try {
+      await navigator.clipboard.writeText(roomId);
+      toast.success("Room ID has been copied");
+    } catch (error) {
+      toast.error("Could not copy the Room ID please try again later");
+      console.log("error", error);
+    }
+  }
+  function leaveRoom() {
+    reactNavigate("/");
+  }
 
   return (
-    <div className='mainWrap'>
-      <aside className='aside'>
-        <div className='asideInner'>
-          <div className='logo'>
-            <img className='logoImage' src={Logo} alt='logo' />
+    <div className="mainWrap">
+      <aside className="aside">
+        <div className="asideInner">
+          <div className="logo">
+            <img className="logoImage" src={Logo} alt="logo" />
           </div>
           <h3>Connected</h3>
-          <section className='clientsList'>
+          <section className="clientsList">
             {clients.map((client) => (
               <Client key={client.sockedId} username={client.username} />
             ))}
           </section>
         </div>
 
-        <button className='btn copyBtn'>Copy ROOM ID</button>
-        <button className='btn leaveBtn'>Leave</button>
+        <button className="btn copyBtn" onClick={copyRoomId}>
+          Copy ROOM ID
+        </button>
+        <button className="btn leaveBtn" onClick={leaveRoom}>
+          Leave
+        </button>
       </aside>
-      <main className='editorWrap'>
-        <EditorComponent />
+      <main className="editorWrap">
+        <EditorComponent
+          socketRef={socketRef}
+          roomId={roomId}
+          onCodeChange={(code) => {
+            codeRef.current = code;
+          }}
+        />
       </main>
     </div>
   );

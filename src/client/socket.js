@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 
 export const initSocket = async () => {
+  //its optional options's object if we want to use.
   // const options = {
   //   "force new connection": true,
   //   reconnectionAttempt: "Infinity",
