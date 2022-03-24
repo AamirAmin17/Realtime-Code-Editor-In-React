@@ -3,8 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev:local": "vite",
-    "dev": "npm run build && npm run server:prod",
+    "dev": "vite",
     "build": "vite build",
     "server:dev": "nodemon server.js",
     "server:prod": "node server.js",
