@@ -12,7 +12,6 @@ import Actions from "../constants/actions/Actions";
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const mirrorRef = useRef();
   const [srcDoc, setSrcDoc] = useState("");
-  console.log("srcDoc", srcDoc);
 
   const getEditorValue = () => {
     setSrcDoc(`
@@ -70,21 +69,22 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
 
   return (
     <div>
-      {/* <button
+      <button
         onClick={getEditorValue}
-        className='bg-slate-600 text-white rounded my-3 p-3 transition-all duration-200 ease-in-out min-w-[100px] hover:bg-slate-700'>
+        className="bg-slate-600 text-white rounded my-3 p-3 transition-all duration-200 ease-in-out min-w-[100px] h-12 hover:bg-slate-700"
+      >
         Run
-      </button> */}
+      </button>
       <textarea id="realtimeEditor"></textarea>
-      {/* <iframe
+      <iframe
         srcDoc={srcDoc}
-        title='output'
-        sandbox='allow-scripts'
-        width='100%'
-        height='100%'
-        placeholder='Output'
-        className='text-white'
-      /> */}
+        title="output"
+        sandbox="allow-scripts"
+        width="100%"
+        height={0}
+        placeholder="Output"
+        className="text-white"
+      />
     </div>
   );
 };
