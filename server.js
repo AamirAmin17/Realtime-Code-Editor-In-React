@@ -8,6 +8,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const cors = require("cors");
 const Actions = require("./ActionsServer");
+const path = require("path");
 app.use(cors());
 
 const io = new Server(server, {
@@ -15,6 +16,11 @@ const io = new Server(server, {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
+});
+
+app.use(express.static("dist"));
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 const userSocketMap = {};
