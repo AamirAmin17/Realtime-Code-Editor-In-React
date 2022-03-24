@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 
 const Editor = () => {
   const [clients, setClients] = useState([]);
-  console.log("Clients", clients);
+
   const location = useLocation();
   const { roomId } = useParams();
   const socketRef = useRef(null);
@@ -27,7 +27,7 @@ const Editor = () => {
   useEffect(() => {
     const init = async () => {
       socketRef.current = await initSocket();
-      console.log(socketRef.current);
+
       socketRef.current.on("connect_error", (err) => handleErrors(err));
       socketRef.current.on("connect_failed", (err) => handleErrors(err));
       socketRef.current.emit(Actions.JOIN, {
@@ -81,28 +81,28 @@ const Editor = () => {
   }
 
   return (
-    <div className="mainWrap">
-      <aside className="aside">
-        <div className="asideInner">
-          <div className="logo">
-            <img className="logoImage" src={Logo} alt="logo" />
+    <div className='mainWrap'>
+      <aside className='aside'>
+        <div className='asideInner'>
+          <div className='logo'>
+            <img className='logoImage' src={Logo} alt='logo' />
           </div>
           <h3>Connected</h3>
-          <section className="clientsList">
+          <section className='clientsList'>
             {clients.map((client) => (
               <Client key={client.sockedId} username={client.username} />
             ))}
           </section>
         </div>
 
-        <button className="btn copyBtn" onClick={copyRoomId}>
+        <button className='btn copyBtn' onClick={copyRoomId}>
           Copy ROOM ID
         </button>
-        <button className="btn leaveBtn" onClick={leaveRoom}>
+        <button className='btn leaveBtn' onClick={leaveRoom}>
           Leave
         </button>
       </aside>
-      <main className="editorWrap">
+      <main className='editorWrap'>
         <EditorComponent
           socketRef={socketRef}
           roomId={roomId}
